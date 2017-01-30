@@ -2,7 +2,8 @@
 
 const models = require('../models')
 const hash = require('password-hash')
-var jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
+var config = require('../config/secret.js')
 
 var express = require('express');
 var app = express();
@@ -22,8 +23,11 @@ let userController = {
     let username = req.body.username
     let password = req.body.password
     user.find({where: {username : username}}).then(function(data){
+      if(!data){
+        res.send('user not found')
+      }
       if(hash.verify(password, data.password)){
-        var token = jwt.sign(data.dataValues, 'superSecret', { expiresIn: 60 * 60 });
+        var token = jwt.sign(data.dataValues, config.secret, { expiresIn: 60 * 60 });
         res.json({
           success: true,
           message: 'Enjoy your token!',

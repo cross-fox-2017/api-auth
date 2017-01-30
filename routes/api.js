@@ -7,9 +7,9 @@ router.get('/users', middleware.adminCek, userController.listUser)
 
 router.get('/users/:id', userController.getUser)
 
-router.post('/users', userController.createUser)
+router.post('/users', middleware.adminCek, userController.createUser)
 
-router.delete('/users/:id', userController.deleteUser)
+router.delete('/users/:id', middleware.adminCek, userController.deleteUser)
 
 router.put('/users/:id', userController.updateUser)
 
