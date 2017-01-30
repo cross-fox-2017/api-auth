@@ -26,4 +26,4 @@ npm start
 ```
 
 Access:
-http://localhost:3000/
+http://localhost:3000/ OR https://fast-atoll-70338.herokuapp.com/
