@@ -4,12 +4,15 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var jwt = require('jsonwebtoken');
+var config = require('./config/secret.js')
 
 var index = require('./routes/index');
 var users = require('./routes/users');
 var api = require('./routes/api');
 
 var app = express();
+var router = express.Router()
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -22,6 +25,33 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.set('secret', config.secret)
+
+app.use('/api/users', function(req, res, next) {
+  // check header or url parameters or post parameters for token
+  var token = req.body.token || req.query.token || req.headers['x-access-token'];
+  // decode token
+  if (token) {
+    // verifies secret and checks exp
+    jwt.verify(token, app.get('secret'), function(err, decoded) {
+      if (err) {
+        return res.json({ success: false, message: 'Failed to authenticate token.' });
+      } else {
+        // if everything is good, save to request for use in other routes
+        req.decoded = decoded;
+        next();
+      }
+    });
+  } else {
+    // if there is no token
+    // return an error
+    return res.status(403).send({
+        success: false,
+        message: 'No token provided.'
+    });
+  }
+});
+
 
 app.use('/', index);
 app.use('/users', users);
