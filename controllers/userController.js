@@ -52,7 +52,26 @@ module.exports = {
     },
 
     signup_user : function(req, res) {
-      
+
+      model.User.create({
+
+        username  : req.body.username,
+        password  : passwordHash.generate(req.body.password),
+        name      : req.body.name,
+        email     : req.body.email,
+        bio       : req.body.bio,
+        createdAt : new Date(),
+        updatedAt : new Date()
+
+      }).then(function(user){
+
+              res.send({message: `new user created ! `})
+      })
+
+    },
+
+    signin_user : function(req, res) {
+
       model.User.create({
 
         username  : req.body.username,
