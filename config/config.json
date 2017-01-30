@@ -1,0 +1,13 @@
+{
+  "development": {
+    "dialect": "sqlite",
+    "storage": "db/users.db",
+    "logging": false,
+    "base_url": "http://localhost:3000/"
+  },
+  "production": {
+    "storage": "db/users.db",
+    "dialect": "sqlite",
+    "base_url": "https://morning-cove-26393.herokuapp.com/"
+  }
+}
