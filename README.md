@@ -2,7 +2,7 @@
 
 API with Authentication
 
-Melisting berbagai users, terbagi menjadi admin dan user biasa menggunakan Authentication untuk login.
+Melisting berbagai users, terbagi menjadi admin dan user, menggunakan Authentication token untuk login.
 
 List of Routes:
 
@@ -24,3 +24,6 @@ npm install -g sqlite
 sequelize db:migrate
 npm start
 ```
+
+Access:
+http://localhost:3000/

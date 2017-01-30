@@ -53,12 +53,18 @@ let userController = {
     let password = hash.generate(req.body.password)
     let role = req.body.role
     user.create({username: username, email: email, password: password, role: role}).then(function(data){
-      res.json(data)
+      res.json({
+        created: 'success',
+        data: data
+      })
     })
   },
   getUser: function (req, res) {
     let id = req.params.id
     user.findById(id).then(function(user){
+      if(!user){
+        res.send(`user id ${id} not found`)
+      }
       res.json(user)
     })
   },
@@ -66,7 +72,10 @@ let userController = {
     let id = req.params.id
     user.findById(id).then(function(data){
       data.destroy().then(function(user){
-        res.json(data)
+        res.json({
+          deleted: 'success',
+          data: data
+        })
       })
     })
   },
