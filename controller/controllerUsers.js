@@ -19,7 +19,7 @@ module.exports = {
     },
 
     createUser : function(req, res, next) {
-      models.User.create({username: req.body.username ,password: hash.generate(req.body.password)}).then(function (data) {
+      models.User.create({username: req.body.username ,password: hash.generate(req.body.password), isadmin: req.body.role}).then(function (data) {
           res.send(data)
         })
     },
@@ -39,6 +39,7 @@ module.exports = {
         data.update({
           username: req.body.username,
           password: hash.generate(req.body.password),
+          isadmin: req.body.role,
           updateAt: new Date()
         })
       }).then(function(data){
