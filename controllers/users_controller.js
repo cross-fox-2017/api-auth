@@ -24,7 +24,7 @@ module.exports = {
       updatedAt: new Date()
     }).then(function (data) {
       console.log(data);
-      res.send(`${JSON.stringify({users:data})}\nhas been created`)
+      res.send(`User:\nname:${req.body.name}\npassword:${hash.generate(req.body.password)}\nemail:${req.body.email}\nbirthday: ${req.body.birthday}\nhas been created`)
     })
   },
   deleteUser: (req, res) => {
@@ -49,5 +49,8 @@ module.exports = {
       console.log(req.body.name);
       res.send(`Update user:\nname:${req.body.name}\npassword:${hash.generate(req.body.password)}\nemail:${req.body.email}\nbirthday: ${req.body.birthday}`)
     })
+  },
+  signUp: (req, res) => {
+    
   }
 }
