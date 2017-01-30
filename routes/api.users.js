@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var users = require('../controllers/controller.user');
+var middleware = require('../controllers/middleware');
 
 
 
@@ -14,5 +15,8 @@ router.post('/', users.createOneUser);
 router.delete('/:id', users.deleteOneUser);
 
 router.put('/:id', users.editOneUser);
+
+/* Login */
+router.post('/login', middleware.login, users.login);
 
 module.exports = router;
