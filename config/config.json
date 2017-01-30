@@ -7,4 +7,5 @@
   "production": {
     "storage": "db/user.db",
     "dialect": "sqlite"
+  }
 }

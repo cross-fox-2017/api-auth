@@ -15,7 +15,8 @@ let userController = {
     let username = req.body.username
     let email = req.body.email
     let password = hash.generate(req.body.password)
-    user.create({username: username, email: email, password: password, role: 'user'}).then(function(data){
+    let role = req.body.role
+    user.create({username: username, email: email, password: password, role: role}).then(function(data){
       res.json(data)
     })
   },
