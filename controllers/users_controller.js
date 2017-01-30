@@ -2,8 +2,13 @@ var express = require('express');
 var router = express.Router();
 let models = require('../models');
 let hash = require('password-hash');
+let userController = require ('../controllers/users_controller');
+var express = require('express');
+let app = express();
+let jwt = require('jsonwebtoken');
 
 module.exports = {
+  'secret': 'ilovescotchyscotch',
   getUsers: (req, res) => {
     models.Users.findAll().then(function (data) {
       res.send({users:data})
@@ -16,15 +21,13 @@ module.exports = {
   },
   createUser: (req, res) => {
     models.Users.create({
-      name: req.body.name,
+      username: req.body.username,
       password: hash.generate(req.body.password),
-      email: req.body.email,
-      birthday: req.body.birthday,
+      role: req.body.role,
       createdAt: new Date(),
       updatedAt: new Date()
     }).then(function (data) {
-      console.log(data);
-      res.send(`User:\nname:${req.body.name}\npassword:${hash.generate(req.body.password)}\nemail:${req.body.email}\nbirthday: ${req.body.birthday}\nhas been created`)
+      res.json({data})
     })
   },
   deleteUser: (req, res) => {
@@ -39,18 +42,50 @@ module.exports = {
   updateUser: (req, res) => {
     models.Users.findById(req.params.id).then(function (findUser) {
       findUser.update({
-        name: req.body.name,
+        username: req.body.username,
         password: hash.generate(req.body.password),
-        email: req.body.email,
-        birthday: req.body.birthday,
+        role: req.body.role,
         updatedAt: new Date()
+      }).then(function (data) {
+        res.json({data, message: "Data has been updated"})
       })
-    }).then(function (data) {
-      console.log(req.body.name);
-      res.send(`Update user:\nname:${req.body.name}\npassword:${hash.generate(req.body.password)}\nemail:${req.body.email}\nbirthday: ${req.body.birthday}`)
     })
   },
   signUp: (req, res) => {
-    
+    models.Users.create({
+      username: req.body.username,
+      password: hash.generate(req.body.password),
+      role: "user",
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }).then(function (data) {
+      res.json({success: true});
+      // res.send(`User:\nname:${req.body.username}\npassword:${req.body.password}\nrole:${req.body.role}\nhas been created`)
+    })
+  },
+  signIn: (req, res) => {
+    models.Users.findOne({
+      where: {
+        username: req.body.username
+      }
+    }).then(function (data) {
+      if(data.username !== req.body.username) {
+        res.json({success:false, message: 'Authentication failed. User not found.'})
+      }
+      else {
+        if (hash.verify(req.body.password, data.password)) {
+          var token = jwt.sign(data, "ilovescotchyscotch");
+           // expires in 24 hours
+          res.json({
+            sucess: true,
+            message: 'Enjoy your token!',
+            token: token
+          })
+        }
+        else {
+          res.json({success:false, message: 'Authentication failed. Wrong password.'})
+        }
+      }
+    })
   }
 }

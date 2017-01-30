@@ -19,7 +19,13 @@ Demo app dengan REST API Authentication
 # Usage
 
 ```
-npm install -g sequelize-cli express-generator sqlite3 nodemon
+npm install -g sequelize-cli sequelize xpress-generator sqlite3 nodemon
 npm start
+
+```
+# Access
+
+```
+Access the website via http://localhost:3000/api/users
 
 ```

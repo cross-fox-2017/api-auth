@@ -9,11 +9,14 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var apiUsers = require('./routes/api/users')
 
+let userController = require ('./controllers/users_controller');
+
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.set('superSecret', userController.secret);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

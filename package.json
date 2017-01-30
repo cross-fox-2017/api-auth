@@ -19,6 +19,7 @@
     "sqlite3": "^3.1.8"
   },
   "devDependencies": {
+    "jsonwebtoken": "^7.2.1",
     "nodemon": "^1.11.0",
     "sequelize-cli": "^2.5.1"
   }
