@@ -2,19 +2,37 @@
 
 const models = require('../models')
 const hash = require('password-hash')
+var jwt = require('jsonwebtoken');
+
+var express = require('express');
+var app = express();
+
 let user = models.User
 
 let userController = {
   signup: function (req, res){
-    let name = req.body.name
+    let username = req.body.username
     let email = req.body.email
     let password = hash.generate(req.body.password)
-    user.create({{name: name, email: email, password: password, role: 'user'}).then(function(data){
+    user.create({username: username, email: email, password: password, role: 'user'}).then(function(data){
       res.json(data)
     })
   },
   signin: function (req, res) {
-
+    let username = req.body.username
+    let password = req.body.password
+    user.find({where: {username : username}}).then(function(data){
+      if(hash.verify(password, data.password)){
+        var token = jwt.sign(data.dataValues, 'superSecret', { expiresIn: 60 * 60 });
+        res.json({
+          success: true,
+          message: 'Enjoy your token!',
+          token: token
+        });
+      } else {
+        res.send('Wrong username or password')
+      }
+    })
   },
   listUser: function(req, res){
     user.findAll().then(function(data){
@@ -26,11 +44,11 @@ let userController = {
     })
   },
   createUser: function(req, res){
-    let name = req.body.name
+    let username = req.body.username
     let email = req.body.email
     let password = hash.generate(req.body.password)
     let role = req.body.role
-    user.create({name: name, email: email, password: password, role: role}).then(function(data){
+    user.create({username: username, email: email, password: password, role: role}).then(function(data){
       res.json(data)
     })
   },
@@ -50,18 +68,21 @@ let userController = {
   },
   updateUser: function (req, res) {
     let id = req.params.id
-    let name = req.body.name
+    let username = req.body.username
     let email = req.body.email
     let password = hash.generate(req.body.password)
     user.findById(id).then(function(user){
       user.update({
-        name: name,
+        username: username,
         email: email,
         password: password
       }).then(function(user){
         res.json(user)
       })
     })
+  },
+  stopper: function(req, res){
+    res.send('404')
   }
 }
 

@@ -12,4 +12,9 @@ router.delete('/users/:id', userController.deleteUser)
 
 router.put('/users/:id', userController.updateUser)
 
+router.post('/signin', userController.signin)
+
+router.post('/signup', userController.signup)
+
+router.get('*', userController.stopper)
 module.exports = router
