@@ -3,6 +3,7 @@
     "username": "crossUser",
     "password": "1234",
     "database": "api-basic-db",
+    
     "host": "localhost",
     "dialect": "postgres"
   },
