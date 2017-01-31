@@ -3,7 +3,6 @@ var router = express.Router();
 let models = require('../models');
 let hash = require('password-hash');
 let userController = require ('../controllers/users_controller');
-var express = require('express');
 let app = express();
 let jwt = require('jsonwebtoken');
 
