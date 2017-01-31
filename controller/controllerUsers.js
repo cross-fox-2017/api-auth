@@ -3,6 +3,8 @@ var hash = require('password-hash');
 var jwt = require('jsonwebtoken');
 var express = require('express');
 var router = express.Router();
+var env       = process.env.NODE_ENV || 'development';
+var config    = require(__dirname + '/../config/config.json')[env];
 
 module.exports = {
 
@@ -62,21 +64,20 @@ module.exports = {
           username: req.body.username
         }
       }).then(function(user){
-
-        if(hash.verify(req.body.password, user.password) == false){
+        if(!user){
+          res.send('user not found')
+        }
+        if(hash.verify(req.body.password, user.password) == true){
+          var token = jwt.sign(user.dataValues, config.secret, { expiresIn: 60 * 60 });
+          res.json({
+            success: true,
+            message: 'Enjoy your token!',
+            token: token
+          });
+        } else {
             res.send("wrong password")
-          }
-        else if(hash.verify(req.body.password, user.password) == true){
-
-          // jwt.sign({ foo: 'bar' }, cert, { algorithm: 'RS256' }, function(err, token) {
-          //   console.log(token);
-          //   });
         }
 
     })
-
-
-
-
 }
 }
