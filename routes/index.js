@@ -7,15 +7,15 @@ router.get('/', function(req, res, next) {
   res.send('nothing here');
 });
 
-router.get('/api/users', con.findAllUsers)
+router.get('/api/users',con.verifyAdmin,con.findAllUsers)
 
-router.get('/api/users/:id', con.findUser)
+router.get('/api/users/:id',con.verify, con.findUser)
 
-router.post('/api/signup', con.createUser)
+router.post('/api/signup',con.createUser)
 
-router.put('/api/users/:id', con.updateUser)
+router.put('/api/users/:id',con.verify,con.updateUser)
 
-router.delete('/api/users/:id',con.deleteUser)
+router.delete('/api/users/:id',con.verifyAdmin,con.deleteUser)
 
 router.post('/api/signin',con.isLogin)
 

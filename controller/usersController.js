@@ -20,14 +20,13 @@ module.exports={
         res.json({ success: false, message: 'Authentication failed. Wrong password.' });
       }
       else{
-        var token = jwt.sign({username:user.user_name,role:user.role}, 'superSecret',{expiresIn: 60*60})
-        var decoded = jwt.verify(token, 'superSecret');
-        req.header= decoded
+        var token = jwt.sign({id:user.id,username:user.user_name,role:user.role}, 'superSecret',{expiresIn: 60*60})
+
         res.json(
           {
             success: true,
             token: token,
-            decode: req.header,
+
 
           }
         );
@@ -35,7 +34,24 @@ module.exports={
       }
     })
   },
-
+  verify :function(req,res,next){
+    var decoded = jwt.verify(req.query.token, 'superSecret');
+    if(decoded.id === Number(req.params.id)||decoded.role==='admin'){
+      next();
+    }
+    else{
+      res.send("you shall not pass!!")
+    }
+  },
+  verifyAdmin :function(req,res,next){
+    var decoded = jwt.verify(req.query.token, 'superSecret');
+    if(decoded.role==='admin'){
+      next();
+    }
+    else{
+      res.send("youre not admin,youre not worthy!!")
+    }
+  },
 
   findAllUsers :function(req,res){
     db.User.findAll().then(function(users){
