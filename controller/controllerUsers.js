@@ -79,5 +79,28 @@ module.exports = {
         }
 
     })
-}
+  },
+  verifyAdmin : function(req, res, next){
+    var decode = jwt.verify(req.header('token'), config.secret)
+
+    if(decode && decode.isadmin == true){
+      next()
+    } else {
+      res.send("you are not admin")
+    }
+  },
+
+  verifyUser : function(req, res, next){
+    var decode = jwt.verify(req.header('token'), config.secret)
+
+    if(decode && decode.isadmin == true){
+      next()
+    }
+    else if(decode && decode.isadmin == false){
+      next()
+    } else {
+      res.send("you are not login")
+    }
+  }
+
 }
