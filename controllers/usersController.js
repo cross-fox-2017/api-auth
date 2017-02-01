@@ -15,18 +15,21 @@ module.exports = {
     }
 
     models.Users.find({where:{username: req.body.username}}).then(function (user){
-      if (passwordHash.verify(req.body.password, user.password) === null) {
-        res.status(400).send('Invalid Password');
+      if (!passwordHash.verify(req.body.password, user.password)) {
+        res.send("Invalid Password")
       } else {
-        let myToken = jwt.sign({ username: req.body.username}, 'idabaguschahyadhegana120189')
-        res.status(200).json(myToken);
+        let myToken = jwt.sign({id: user.id, role: user.role}, 'secret', { expiresIn: '1h' });
+        console.log(user.role, user.id, user.username);
+        res.json(myToken);
+        // res.send(user.role)
       }
     });
   },
   createUser: function(req, res, next) {
     models.Users.create({
       username: req.body.username,
-      password: passwordHash.generate(req.body.password)
+      password: passwordHash.generate(req.body.password),
+      role: req.body.role
     }).then((data) => {
       res.send(data)
     })
@@ -54,7 +57,8 @@ module.exports = {
     models.Users.findById(req.params.id).then(function (data) {
       data.update({
         username: req.body.username,
-        password: req.body.password
+        password: passwordHash.generate(req.body.password),
+        role: req.body.role
       })
     }).then((data) => {
       res.send({message: `User with id ${req.params.id} has been updated`})

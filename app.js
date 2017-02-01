@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(expressJWT({ secret: 'idabaguschahyadhegana120189'}).unless({ path: ['/api/signin', '/api/users']}));
+// app.use(expressJWT({ secret: 'idabaguschahyadhegana120189'}).unless({ path: ['/api/signin', '/api/users']}));
 
 app.use('/api', index);
 app.use('/api/users', users);
