@@ -4,6 +4,7 @@ const hash = require('password-hash');
 var express = require('express');
 var app = express();
 const config = require('../config');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
     getAllUsers : function(req, res) {
@@ -38,23 +39,35 @@ module.exports = {
           username: req.body.username
         }
       }).then(function(data) {
+        console.log(data);
         if(data == null) {
           res.send('NO USER DETECTED')
         }
         var verify = hash.verify(req.body.password, data.password)
-        if(verify == true && data.isadmin == true) {
-          var token = jwt.sign(user, app.get('secret'), {
-            expiresInMinutes: 1440
-          })
-          res.send({users: data, token: token})
-        } else if(verify == true && data.isadmin == true) {
-          var token = jwt.sign(user,app.get('secret'), {
-            expiresInMinutes: 1440
-          })
+        if(verify == true) {
+        var token = jwt.sign({id:data.id, username:data.username, isadmin: data.isadmin}, config.secret)
           res.send({users: data, token: token})
         } else {
           res.send('WRONG PASSWORD')
         }
       })
+    }, verifyAdmin : function (req,res,next) {
+      var decode = jwt.verify(req.header('token'), config.secret)
+      if (decode && decode.isadmin) {
+        next()
+      } else if (decode && decode.isadmin == false) {
+        res.send('YOU ARE NOT ADMIN')
+      } else {
+        res.send('WRONG KEY')
+      }
+    }, verifyUser: function (req,res,next) {
+      var decode = jwt.verify(req.header('token'), config.secret)
+      if (decode && decode.isadmin) {
+        next()
+      } else if (decode && decode.isadmin == false) {
+        next()
+      } else {
+        res.send('WRONG KEY')
+      }
     }
 }

@@ -9,7 +9,7 @@ var index = require('./routes/index');
 var usersApi = require('./routes/api/users');
 
 var app = express();
-var expressJWT = require('express-jwt')
+// var expressJWT = require('express-jwt')
 var jwt = require('jsonwebtoken');
 var config = require('./config');
 
@@ -22,7 +22,7 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(expressJWT({secret: 'uvuvuvwevwevwe onyetenyevwe ugwemubwem osas'}))
+// app.use(expressJWT({secret: 'uvuvuvwevwevwe onyetenyevwe ugwemubwem osas'}))
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
