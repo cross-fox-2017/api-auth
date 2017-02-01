@@ -1,32 +1,37 @@
-var express = require('express');
-var router = express.Router();
-let models = require('../models');
-let hash = require('password-hash');
-let userController = require ('../controllers/users_controller');
-let app = express();
-let jwt = require('jsonwebtoken');
+var express = require('express')
+var router = express.Router()
+let models = require('../models')
+let userController = require('../controllers/users_controller')
+let config = require('../config.json')
+let jwt = require('jsonwebtoken')
+let hash = require('password-hash')
 
 module.exports = {
-  'secret': 'ilovescotchyscotch',
   getUsers: (req, res) => {
     models.Users.findAll().then(function (data) {
-      res.send({users:data})
+      res.send({users: data})
+    }).catch(function (err) {
+      res.json(err)
     })
   },
   getUser: (req, res) => {
     models.Users.findById(req.params.id).then(function (data) {
-      res.send({user:data})
+      res.send({user: data})
+    }).catch(function (err) {
+      res.json(err)
     })
   },
   createUser: (req, res) => {
     models.Users.create({
       username: req.body.username,
       password: hash.generate(req.body.password),
-      role: req.body.role,
+      role: 'user',
       createdAt: new Date(),
       updatedAt: new Date()
     }).then(function (data) {
       res.json({data})
+    }).catch(function (err) {
+      res.json(err)
     })
   },
   deleteUser: (req, res) => {
@@ -36,6 +41,8 @@ module.exports = {
       }
     }).then(function (data) {
       res.send(`Delete user with ID: ${req.params.id}`)
+    }).catch(function (err) {
+      res.json(err)
     })
   },
   updateUser: (req, res) => {
@@ -46,20 +53,23 @@ module.exports = {
         role: req.body.role,
         updatedAt: new Date()
       }).then(function (data) {
-        res.json({data, message: "Data has been updated"})
+        res.json({data, message: 'Data has been updated'})
       })
+    }).catch(function (err) {
+      res.json(err)
     })
   },
   signUp: (req, res) => {
     models.Users.create({
       username: req.body.username,
       password: hash.generate(req.body.password),
-      role: "user",
+      role: req.body.role,
       createdAt: new Date(),
       updatedAt: new Date()
     }).then(function (data) {
-      res.json({success: true});
-      // res.send(`User:\nname:${req.body.username}\npassword:${req.body.password}\nrole:${req.body.role}\nhas been created`)
+      res.json({data, success: true})
+    }).catch(function (err) {
+      res.json(err)
     })
   },
   signIn: (req, res) => {
@@ -68,23 +78,33 @@ module.exports = {
         username: req.body.username
       }
     }).then(function (data) {
-      if(data.username !== req.body.username) {
-        res.json({success:false, message: 'Authentication failed. User not found.'})
-      }
-      else {
+      if (data.username !== req.body.username) {
+        res.json({success: false, message: 'Authentication failed. User not found.'})
+      } else {
         if (hash.verify(req.body.password, data.password)) {
-          var token = jwt.sign(data, "ilovescotchyscotch");
-           // expires in 24 hours
+          let token = jwt.sign({data}, config.secret, {algorithm: 'HS256'}, {expiresIn: '1h'})
           res.json({
-            sucess: true,
-            message: 'Enjoy your token!',
+            success: true,
             token: token
           })
-        }
-        else {
-          res.json({success:false, message: 'Authentication failed. Wrong password.'})
+        } else {
+          res.json({success: false, message: 'Authentication failed. Wrong password.'})
         }
       }
+    }).catch(function (err) {
+      res.json(err)
     })
+  },
+  verifyRole: (req, res, next) => {
+    req.decoded = jwt.verify(req.header('Authorization'), config.secret)
+    if (req.decoded.data.role === 'admin') {
+      next()
+    } else if (req.decoded.data.role === 'user') {
+      res.json({message: 'Authentication failed. Role: user'})
+    } else {
+      res.json({message: 'Authentication failed.'})
+    }
   }
+  // user token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxMCwidXNlcm5hbWUiOiJnYW5hIiwicGFzc3dvcmQiOiJzaGExJGIwNzQxMDAyJDEkODQ0NjI0M2EwOTkzOTllMTRmMTVlMWJhZjFhNTk2NjFjZmZiN2ZiMSIsInJvbGUiOiJ1c2VyIiwiY3JlYXRlZEF0IjoiMjAxNy0wMi0wMVQxNDozODozNS40NTdaIiwidXBkYXRlZEF0IjoiMjAxNy0wMi0wMVQxNDozODozNS40NThaIn0sImlhdCI6MTQ4NTk2MTIyM30.-_h42s8dyVtynPAX8Xi2JT5vJ-gEJUxvOEDzIsOCTYw'
+  // admin token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjo5LCJ1c2VybmFtZSI6ImZhZGx5a2F5byIsInBhc3N3b3JkIjoic2hhMSQ1YzVjMDU5NiQxJDFiY2UyNzE3NTgyNGEzNWQxNDlkYWNlMzI1NTY4NzMyZWQzMWUxMTEiLCJyb2xlIjoiYWRtaW4iLCJjcmVhdGVkQXQiOiIyMDE3LTAyLTAxVDE0OjM4OjI4LjkzNloiLCJ1cGRhdGVkQXQiOiIyMDE3LTAyLTAxVDE0OjM4OjI4Ljk0MFoifSwiaWF0IjoxNDg1OTYwNzE0fQ.346wzGxKt1_9S_gC3gOrgCyGNyGfdIhtW4EDosAp0gY'
 }
