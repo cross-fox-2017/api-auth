@@ -11,3 +11,6 @@ List of user routes:
 | /api/users/   | POST  | Create a user
 | /api/users/:id| DELETE| Delete a user
 | /api/users/:id| PUT   | Update a user with new info
+| /api/users/signin| POST| Sign in while get an access token based on credentials
+
+Masukkan token pada header postman dengan key = auth, value = config.token_admin

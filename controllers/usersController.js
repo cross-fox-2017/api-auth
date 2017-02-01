@@ -2,6 +2,7 @@ const models = require('../models');
 var passwordHash = require('password-hash');
 var expressJWT = require('express-jwt')
 var jwt = require('jsonwebtoken');
+const config = require('../config')
 
 module.exports = {
   userSignin: function(req, res, next) {
@@ -63,6 +64,14 @@ module.exports = {
     }).then((data) => {
       res.send({message: `User with id ${req.params.id} has been updated`})
     })
+  },
+  verify: function(req, res, next){
+    var decoded = jwt.verify(req.header('auth'), 'secret');
+    if(decoded && decoded.role === "admin") {
+      next()
+    } else {
+      res.send("You don't have access!")
+    }
   }
 };
 
