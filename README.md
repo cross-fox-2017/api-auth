@@ -1,7 +1,7 @@
 # api-basic
 
 ```
-Make a simple login application
+Make a simple login application, admin create new user
 ```
 
 API
