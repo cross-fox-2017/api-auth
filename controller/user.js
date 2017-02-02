@@ -1,6 +1,37 @@
 const models = require('../models')
+const jwt = require('jsonwebtoken');
+const passwordHash = require('password-hash');
 
 module.exports = {
+    signup: function(req, res, next) {
+        models.User.create({
+            user: req.body.user,
+            password: passwordHash.generate(req.body.password),
+            role: req.body.role || "user"
+        }).then(function(data) {
+            res.send(data)
+        })
+    },
+
+    signin: function(req, res, next) {
+        models.User.find({
+            where: {
+                user: req.body.user
+            }
+        }).then(function(result) {
+          if(result){
+            if(passwordHash.verify(req.body.password,result.password)==true){
+              //iat : session token berakhir dalam 30 detik
+              res.send(jwt.sign({id: result.id, iat: Math.floor(Date.now() / 1000)-30},"CODEuntukDECODE"))
+            }else{
+              res.send("Periksa Kembali User dan Pasword")
+            }
+          }else{
+            res.send("User Belum Terdaftar")
+          }
+        })
+    },
+
     getAllData: function(req, res, next) {
         models.User.findAll().then(function(data) {
             res.send(data)
@@ -14,7 +45,8 @@ module.exports = {
     createUser: function(req, res, next) {
         models.User.create({
             user: req.body.user,
-            password: req.body.password
+            password: passwordHash.generate(req.body.password),
+            role: req.body.role || "user"
         }).then(function(data) {
             res.send(data)
         })
@@ -33,8 +65,9 @@ module.exports = {
         models.User.findById(req.params.id).then(function(data) {
             data.update({
                 user: req.body.user,
-                password: req.body.password
-            }).then(function(showData){
+                password: passwordHash.generate(req.body.password),
+                role: req.body.role || "user"
+            }).then(function(showData) {
                 res.send(showData)
             })
         })

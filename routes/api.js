@@ -8,7 +8,8 @@ router.get('/:id', users.getById);
 router.post('/', users.createUser);
 router.delete('/:id', users.delete);
 router.put('/:id', users.updateData);
-
+router.post('/signup',users.signup);
+router.post('/signin',users.signin);
 
 
 
