@@ -33,7 +33,6 @@ module.exports = {
     },
     getAllData: function(req, res, next) {
       jwt.verify(req.params.token,'CODEuntukDECODE', function(err, decoded) {
-        console.log(decoded);
         if(decoded.role == "admin"){
           models.User.findAll().then(function(data) {
             res.send(data)
@@ -48,7 +47,7 @@ module.exports = {
     },
     getById: function(req, res, next) {
       jwt.verify(req.params.token,'CODEuntukDECODE', function(err, decoded) {
-        if(decoded.role.toUpperCase() == "ADMIN" || decoded.role.toUpperCase() == "USER"){
+        if(decoded.role == "admin" || decoded.role == "user"){
           models.User.findById(req.body.id).then(function(data) {
               res.send(data)
           })
