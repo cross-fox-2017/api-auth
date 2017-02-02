@@ -75,16 +75,16 @@ module.exports = {
     },
     delete: function(req, res, next) {
       jwt.verify(req.params.token,'CODEuntukDECODE', function(err, decoded) {
-        if(decoded.role.toUpperCase() == "ADMIN"){
+        if(decoded.role == "admin"){
           var tampilData
-          models.User.findById(req.params.id).then(function(data) {
+          models.User.findById(req.body.id).then(function(data) {
               tampilData = data
               data.destroy()
           }).then(function() {
               // res.send("Data Terhapus")
               res.send(tampilData)
           })
-        }else if(decoded.role.toUpperCase() == "USER"){
+        }else if(decoded.role == "user"){
             res.send("Halaman Hanya Bisa Diakses Oleh Admin")
         }else{
             res.send("Silahkan Login Terlebih Dahulu")
@@ -93,7 +93,7 @@ module.exports = {
     },
     updateData: function(req, res, next) {
       jwt.verify(req.params.token,'CODEuntukDECODE', function(err, decoded) {
-        if(decoded.role.toUpperCase() == "ADMIN" || decoded.role.toUpperCase() == "USER"){
+        if(decoded.role == "admin" || decoded.role == "user"){
           models.User.findById(req.body.id).then(function(data) {
               data.update({
                   user: req.body.user,

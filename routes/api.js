@@ -8,8 +8,9 @@ router.post('/signin',users.signin);
 router.get('/:token', users.getAllData);
 router.post('/:token', users.getById);
 router.post('/create/:token', users.createUser);
-router.delete('/:id', users.delete);
-router.put('/:id', users.updateData);
+router.put('/:token', users.updateData);
+router.delete('/:token', users.delete);
+
 
 
 
