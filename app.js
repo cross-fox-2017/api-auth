@@ -4,9 +4,14 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+// const expressJWT = require('express-jwt');
+const jwt = require('jsonwebtoken');
 
 var index = require('./routes/index');
+// var signup_signin = require('./routes/signup-signin');
 var apiUsers = require('./routes/api/users');
+var apiSignin = require('./routes/api/signin');
+var apiSignup = require('./routes/api/signup');
 
 var app = express();
 // view engine setup
@@ -21,8 +26,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// app.use(expressJWT({ secret: 'May the force be with you'}).unless({ path: ['/api/login', '/api/users']}))
+
 app.use('/', index);
 app.use('/api/users', apiUsers);
+app.use('/api/signin', apiSignin)
+app.use('/api/signup', apiSignup)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
