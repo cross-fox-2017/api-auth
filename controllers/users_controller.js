@@ -25,7 +25,7 @@ module.exports = {
     models.Users.create({
       username: req.body.username,
       password: hash.generate(req.body.password),
-      role: 'user',
+      role: req.body.role,
       createdAt: new Date(),
       updatedAt: new Date()
     }).then(function (data) {
@@ -63,7 +63,7 @@ module.exports = {
     models.Users.create({
       username: req.body.username,
       password: hash.generate(req.body.password),
-      role: req.body.role,
+      role: 'role',
       createdAt: new Date(),
       updatedAt: new Date()
     }).then(function (data) {
