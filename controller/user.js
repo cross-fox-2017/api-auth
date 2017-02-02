@@ -58,7 +58,7 @@ module.exports = {
     },
     createUser: function(req, res, next) {
       jwt.verify(req.params.token,'CODEuntukDECODE', function(err, decoded) {
-        if(decoded.role.toUpperCase() == "ADMIN"){
+        if(decoded.role == "admin"){
           models.User.create({
               user: req.body.user,
               password: passwordHash.generate(req.body.password),
@@ -66,7 +66,7 @@ module.exports = {
           }).then(function(data) {
               res.send(data)
           })
-        }else if(decoded.role.toUpperCase() == "USER"){
+        }else if(decoded.role == "user"){
             res.send("Halaman Hanya Bisa Diakses Oleh Admin")
         }else{
             res.send("Silahkan Login Terlebih Dahulu")
