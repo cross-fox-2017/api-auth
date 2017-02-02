@@ -6,16 +6,15 @@ Make a simple login application
 
 API
 
-| ROUTER            | HTTP    | DESCRIPTION                 |
-| ---------------   |:-----:  | --------------------------- |
-| /api/users/signin | POST    | login admin                 |
-| /api/users/signup | POST    | register admin              |
-| /api/users        | GET     | Get all users               |
-| /api/users/:id    | GET     | Get one user                |
-| /api/users        | POST    | Create a user               |
-| /api/users/:id    | DELETE  | Delete a user               |
-| /api/users/:id    | PUT     | Update a user with new info |
-| /api/users/:id    | PUT     | Update a user with new info |
+| ROUTER                            | HTTP    | DESCRIPTION                 |
+| ----------------------------------|:-----:  | --------------------------- |
+| localhost:3000/api/auth/login     | POST    | login admin                 |
+| localhost:3000/api/auth/profile   | POST    | admin profile               |
+| localhost:3000/api/auth/register  | POST    | Create a user by admin      |
+| localhost:3000/api/users          | GET     | Get all users               |
+| localhost:3000/api/users/:id      | GET     | Get one user                |
+| localhost:3000/api/users/:id      | DELETE  | Delete a user               |
+| localhost:3000/api/users:id       | PUT     | Update a user with new info |
 
 # npm
 ```
