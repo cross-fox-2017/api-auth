@@ -92,7 +92,7 @@ module.exports = {
       })
     },
     updateData: function(req, res, next) {
-      jwt.verify(req.params.token,'CODEuntukDECODE', function(err, decoded) {
+      jwt.verify(req.params.token,process.env.SECURE, function(err, decoded) {
         if(decoded.role == "admin" || decoded.role == "user"){
           models.User.findById(req.body.id).then(function(data) {
               data.update({
