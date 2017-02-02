@@ -1,6 +1,6 @@
 const models = require('../models');
 var passwordHash = require('password-hash');
-
+var jwt = require('jsonwebtoken');
 
 var middleware = {
 
@@ -20,6 +20,20 @@ var middleware = {
         res.json("masukan password lain");
       }
     });
+  },
+  requireToken: function(req, res, next){
+    /* get token from client */
+    let token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+    /* verify token */
+    if (token) {
+      res.json("token tidak ada, anda belum login")
+    }else{
+      var decoded = jwt.verify(token, 'secret');
+      console.log(decoded);
+    }
+
+    next();
   }
 
 }

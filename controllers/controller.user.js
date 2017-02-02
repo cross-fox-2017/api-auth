@@ -1,24 +1,14 @@
 const models = require('../models');
-var jwt = require('jsonwebtoken');
 var passwordHash = require('password-hash');
+var jwt = require('jsonwebtoken');
+
 
 var users = {
   /* login */
   login: function(req, res, next){
-    console.log("berhasil next");
-    // models.User.findOne({
-    //   where:{
-    //     username:req.body.username
-    //   }
-    // }).then(function(data){
-    //   if(data == null){
-    //     res.json("username tidak di temukan");
-    //   }else if(passwordHash.verify(req.body.password, data.password)){
-    //     res.json("berhasil login");
-    //   }else{
-    //     res.json("masukan password lain");
-    //   }
-    // })
+    console.log("next berhasil : " + req.body.username);
+    var token = jwt.sign({ username: req.body.username }, 'secret');
+    res.json(token)
   },
   /* get all users */
   getAllUser : function(req, res, next) {

@@ -10,7 +10,7 @@ router.get('/', users.getAllUser);
 
 router.get('/:id', users.getOneUser);
 
-router.post('/', users.createOneUser);
+router.post('/', middleware.requireToken, users.createOneUser);
 
 router.delete('/:id', users.deleteOneUser);
 
