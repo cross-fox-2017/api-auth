@@ -1,17 +1,22 @@
-'use strict';
-module.exports = function(sequelize, DataTypes) {
+'use strict'
+module.exports = function (sequelize, DataTypes) {
   var User = sequelize.define('User', {
     username: DataTypes.STRING,
     password: DataTypes.STRING,
     name: DataTypes.STRING,
     email: DataTypes.STRING,
-    bio: DataTypes.TEXT
+    role: DataTypes.STRING
   }, {
     classMethods: {
-      associate: function(models) {
+      associate: function (models) {
         // associations can be defined here
       }
+    },
+    hooks: {
+      afterCreate: function (user) {
+        user.role = 'admin'
+      }
     }
-  });
-  return User;
-};
+  })
+  return User
+}
