@@ -2,18 +2,16 @@ var express = require('express');
 var router = express.Router();
 var db = require("../models");
 var userController = require("../controllers/users")
-// var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
-// var config = require('../config/config');
 
-router.get('/users', userController.list)
+router.get('/users', userController.cekdataAdmin, userController.list)
 
-router.post('/users', userController.add)
+router.post('/users', userController.cekdataAdmin, userController.add)
 
-router.get('/users/:id', userController.find)
+router.get('/users/:id', userController.cekdataUser, userController.find)
 
-router.put('/users/:id', userController.update)
+router.put('/users/:id', userController.cekdataUser, userController.update)
 
-router.delete('/users/:id',userController.delete)
+router.delete('/users/:id',userController.cekdataUser, userController.delete)
 
 router.post('/signup', userController.signup)
 

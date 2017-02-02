@@ -1,5 +1,8 @@
 var db = require("../models");
+var user = db.User
 var passwordHash = require('password-hash');
+var jwt = require('jsonwebtoken')
+var config = require('../config')
 
 module.exports = {
   list: function(req, res, next){
@@ -61,13 +64,41 @@ module.exports = {
       where: { username: req.body.username }
     }).then(function(hasil) {
       if(!hasil) {
-        res.send('you are not registered')
+        res.send('Anda belum melakukan registrasi')
       }
       if(passwordHash.verify(req.body.password, hasil.password)){
-        res.json({show: 'welcome'});
+        var token = jwt.sign(hasil.dataValues, config.secret, {expiresIn: 60*60})
+        res.json( {
+          succes: true,
+          message: 'Selamat Datang',
+          token: token
+      });
       } else {
-        res.send('username or password is wrong')
+        res.send('Silahkan masukkan username dan password yang sudah terdaftar')
       }
     })
+  },
+
+  cekdataUser: function(req, res, next){
+    var decode = jwt.verify(req.header('token'),config.secret)
+    if(decode && decode.admin == true){
+      next()
+    }
+    else if (decode && decode.admin == false) {
+      next()
+    }
+    else {
+      res.send('anda tidak dapat login')
+    }
+  },
+
+  cekdataAdmin: function(req, res, next){
+    var decode = jwt.verify(req.header('token'),config.secret)
+    if(decode && decode.admin == true){
+      next()
+    }
+    else {
+      res.send('anda bukanlah admin')
+    }
   }
 }

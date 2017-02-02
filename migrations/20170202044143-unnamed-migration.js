@@ -20,6 +20,9 @@ module.exports = {
       age: {
         type: Sequelize.INTEGER
       },
+      admin: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
