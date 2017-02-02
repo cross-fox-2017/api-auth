@@ -1,0 +1,17 @@
+{
+  "development": {
+    "storage": "db/user.db",
+    "host": "127.0.0.1",
+    "dialect": "sqlite"
+  },
+  "test": {
+    "storage": "db/user.db",
+    "host": "127.0.0.1",
+    "dialect": "sqlite"
+  },
+  "production": {
+    "storage": "db/user.db",
+    "host": "127.0.0.1",
+    "dialect": "sqlite"
+  }
+}
