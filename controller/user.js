@@ -32,7 +32,7 @@ module.exports = {
         })
     },
     getAllData: function(req, res, next) {
-      jwt.verify(req.params.token,'CODEuntukDECODE', function(err, decoded) {
+      jwt.verify(req.params.token,process.env.SECURE, function(err, decoded) {
         if(decoded.role == "admin"){
           models.User.findAll().then(function(data) {
             res.send(data)
@@ -46,7 +46,7 @@ module.exports = {
       })
     },
     getById: function(req, res, next) {
-      jwt.verify(req.params.token,'CODEuntukDECODE', function(err, decoded) {
+      jwt.verify(req.params.token,process.env.SECURE, function(err, decoded) {
         if(decoded.role == "admin" || decoded.role == "user"){
           models.User.findById(req.body.id).then(function(data) {
               res.send(data)
@@ -57,7 +57,7 @@ module.exports = {
       })
     },
     createUser: function(req, res, next) {
-      jwt.verify(req.params.token,'CODEuntukDECODE', function(err, decoded) {
+      jwt.verify(req.params.token,process.env.SECURE, function(err, decoded) {
         if(decoded.role == "admin"){
           models.User.create({
               user: req.body.user,
@@ -74,7 +74,7 @@ module.exports = {
       })
     },
     delete: function(req, res, next) {
-      jwt.verify(req.params.token,'CODEuntukDECODE', function(err, decoded) {
+      jwt.verify(req.params.token,process.env.SECURE, function(err, decoded) {
         if(decoded.role == "admin"){
           var tampilData
           models.User.findById(req.body.id).then(function(data) {
