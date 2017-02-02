@@ -4,7 +4,7 @@ var users = require('../controllers/controller.user')
 var middleware = require('../controllers/middleware')
 
 /* localhost:3000/api/users | show all data user */
-router.get('/', users.getAllUser)
+router.get('/', middleware.decodeToken, middleware.validateUser, users.getAllUser)
 /* localhost:3000/api/users/:id | show one data user */
 router.get('/:id', users.getOneUser)
 /* localhost:3000/api/users/:id | delete one data user */

@@ -32,7 +32,7 @@ API
 
 # how to use this app
 ```
-1. fisrt you need to register by using this url : localhost:3000/api/users
+1. fisrt you need to register by using this url : localhost:3000/api/users by method post, with key username and password
+2. go to login
+3. after that you will get a token, and then use it, use postman to check it, if the endpoint using get method then using header with x-access-token (req.headers) and fill the value by your token that you get
 ```
-
-Access the website via http://localhost:3000 or API localhost:3000/api/users
