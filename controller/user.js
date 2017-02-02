@@ -37,6 +37,7 @@ module.exports = {
         if(decoded.role == "admin"){
           models.User.findAll().then(function(data) {
             res.send(data)
+            // res.json(data)
           })
         }else if(decoded.role == "user"){
             res.send("Halaman Hanya Bisa Diakses Oleh Admin")
