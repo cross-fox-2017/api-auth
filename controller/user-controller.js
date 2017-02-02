@@ -8,12 +8,9 @@ module.exports = {
 
     // Get all users
     getAllUser : function(req, res) {
-      if (true) {
-
-      }
-      user.findAll().then(function (data) {
-        res.send(data)
-      })
+        user.findAll().then(function (data) {
+          res.send(data)
+        })
     },
 
     // GET single user
