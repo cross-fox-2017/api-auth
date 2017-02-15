@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var db = require("../models");
 var userController = require("../controllers/users")
 
 router.get('/users', userController.cekdataAdmin, userController.list)
