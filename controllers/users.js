@@ -42,7 +42,7 @@ module.exports = {
       username: req.body.username,
       password: passwordHash.generate(req.body.password),
       name: req.body.name,
-      admin: false,
+      admin: true,
       age: req.body.age}).then(function(result){
       res.json(result);
     })
