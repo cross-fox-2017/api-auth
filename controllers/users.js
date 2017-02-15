@@ -6,16 +6,16 @@ var config = require('../config')
 
 module.exports = {
   list: function(req, res, next){
-    db.User.findAll({raw:true}).then(function(users_data){
-    res.json(users_data);
+    db.User.findAll().then(function(result){
+    res.json(result);
     })
   },
 
   find: function(req, res, next){
     db.User.findOne({
       where: {id: req.params.id}
-    }).then(function(user){
-      res.json({user});
+    }).then(function(result){
+      res.json(result);
     })
   },
 
@@ -32,8 +32,8 @@ module.exports = {
       username: req.body.username,
       password: passwordHash.generate(req.body.password),
       name: req.body.name,
-      age: req.body.age}).then(function(user){
-      res.json(user);
+      age: req.body.age}).then(function(result){
+      res.json(result);
     })
   },
 
@@ -43,8 +43,8 @@ module.exports = {
       password: passwordHash.generate(req.body.password),
       name: req.body.name,
       admin: false,
-      age: req.body.age}).then(function(user){
-      res.json(user);
+      age: req.body.age}).then(function(result){
+      res.json(result);
     })
   },
 
@@ -54,8 +54,8 @@ module.exports = {
         username: req.body.username,
         password: passwordHash.generate(req.body.password),
         name: req.body.name,
-        admin: req.body.admin}).then(function(user){
-        res.json(user);
+        admin: req.body.admin}).then(function(result){
+        res.json(result);
       })
     })
   },
@@ -63,12 +63,12 @@ module.exports = {
   signin: function(req, res, next){
     db.User.findOne({
       where: { username: req.body.username }
-    }).then(function(hasil) {
-      if(!hasil) {
+    }).then(function(result) {
+      if(!result) {
         res.send('Anda belum melakukan registrasi')
       }
-      if(passwordHash.verify(req.body.password, hasil.password)){
-        var token = jwt.sign(hasil.dataValues, config.secret, {expiresIn: 60*60})
+      if(passwordHash.verify(req.body.password, result.password)){
+        var token = jwt.sign(result.dataValues, config.secret, {expiresIn: 60*60})
         res.json( {
           succes: true,
           message: 'Selamat Datang',
@@ -89,7 +89,7 @@ module.exports = {
       next()
     }
     else {
-      res.send('anda tidak dapat login')
+      res.send('anda tidak memiliki hak untuk akses data')
     }
   },
 
